@@ -1,7 +1,9 @@
 min_version = "2026.6.0"
 
 [settings]
-npm.package_manager = "bun"
+# QMD launches with Node and includes native modules, so its installer must use
+# the same runtime ABI. Bun remains available for projects and other tooling.
+npm.package_manager = "npm"
 
 [tools]
 actionlint = "1"
@@ -16,7 +18,7 @@ helm = "4"
 jq = "1"
 kubectl = "latest"
 node = "24"
-"npm:@tobilu/qmd" = "latest"
+"npm:@tobilu/qmd" = { version = "latest", npm_args = "--ignore-scripts=false" }
 opentofu = "1"
 python = "3.14"
 rclone = "1"
