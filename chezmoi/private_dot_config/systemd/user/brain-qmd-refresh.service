@@ -1,0 +1,7 @@
+[Unit]
+Description=Refresh the Brain QMD index
+
+[Service]
+Type=oneshot
+EnvironmentFile=-%h/.config/brain/sync.env
+ExecStart=%h/.local/bin/brain-qmd-refresh

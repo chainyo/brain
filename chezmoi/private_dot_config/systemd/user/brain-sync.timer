@@ -1,0 +1,11 @@
+[Unit]
+Description=Synchronize the Brain vault regularly
+
+[Timer]
+OnBootSec=1m
+OnUnitInactiveSec=2m
+Persistent=true
+RandomizedDelaySec=15s
+
+[Install]
+WantedBy=timers.target

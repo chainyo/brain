@@ -1,0 +1,25 @@
+#!/bin/sh
+set -eu
+
+if [ -n "${BRAIN_ROOT:-}" ]; then
+  brain_root="$BRAIN_ROOT"
+elif [ -d "$PWD/content" ] && [ -f "$PWD/.chezmoiroot" ]; then
+  brain_root="$PWD"
+else
+  brain_root="$HOME/brain"
+fi
+content_dir="$brain_root/content"
+mise_bin="${MISE_BIN:-$HOME/.local/bin/mise}"
+
+if [ ! -d "$content_dir" ]; then
+  printf 'Brain vault not found: %s\n' "$content_dir" >&2
+  exit 1
+fi
+
+if [ ! -x "$mise_bin" ]; then
+  printf 'Mise not found: %s\n' "$mise_bin" >&2
+  exit 1
+fi
+
+"$mise_bin" exec -- qmd --index brain update
+"$mise_bin" exec -- qmd --index brain embed

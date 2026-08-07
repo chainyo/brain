@@ -1,0 +1,130 @@
+#!/bin/sh
+set -eu
+
+usage() {
+  cat <<'EOF'
+Usage: brain-sync [--init] [--dry-run]
+
+Synchronize the private vault through the configured rclone crypt remote, then
+refresh the per-user QMD index. Use --init for the first run or after changing
+sync filters. Add --dry-run to preview the initial merge without writing.
+EOF
+}
+
+initial=false
+dry_run=false
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --init)
+      initial=true
+      ;;
+    --dry-run)
+      dry_run=true
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      usage >&2
+      exit 2
+      ;;
+  esac
+  shift
+done
+
+if [ "$dry_run" = true ] && [ "$initial" != true ]; then
+  printf '%s\n' '--dry-run is supported only with --init.' >&2
+  exit 2
+fi
+
+if [ -n "${BRAIN_ROOT:-}" ]; then
+  brain_root="$BRAIN_ROOT"
+elif [ -d "$PWD/content" ] && [ -f "$PWD/.chezmoiroot" ]; then
+  brain_root="$PWD"
+else
+  brain_root="$HOME/brain"
+fi
+content_dir="$brain_root/content"
+remote="${BRAIN_RCLONE_REMOTE:-brain-vault:}"
+filter_file="${BRAIN_RCLONE_FILTER:-$HOME/.config/brain/rclone-filter.txt}"
+mise_bin="${MISE_BIN:-$HOME/.local/bin/mise}"
+state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/brain"
+
+if [ ! -d "$content_dir" ]; then
+  printf 'Brain vault not found: %s\n' "$content_dir" >&2
+  exit 1
+fi
+
+if [ ! -f "$filter_file" ]; then
+  printf 'rclone filter not found: %s\n' "$filter_file" >&2
+  exit 1
+fi
+
+if [ ! -x "$mise_bin" ]; then
+  printf 'Mise not found: %s\n' "$mise_bin" >&2
+  exit 1
+fi
+
+if ! command -v flock >/dev/null 2>&1; then
+  printf '%s\n' 'flock is required; install the util-linux package.' >&2
+  exit 1
+fi
+
+mkdir -p "$state_dir"
+exec 9>"$state_dir/sync.lock"
+if ! flock -n 9; then
+  printf '%s\n' 'Another Brain synchronization is already running.'
+  exit 0
+fi
+
+rclone() {
+  "$mise_bin" exec -- rclone "$@"
+}
+
+if [ "$initial" = true ]; then
+  if [ "$dry_run" = true ]; then
+    rclone bisync "$content_dir" "$remote" \
+      --filter-from "$filter_file" \
+      --resync-mode newer \
+      --conflict-resolve none \
+      --create-empty-src-dirs \
+      --dry-run
+    exit 0
+  fi
+
+  remote_root="${remote%/}"
+  case "$remote_root" in
+    *:)
+      remote_check="${remote_root}RCLONE_TEST"
+      ;;
+    *)
+      remote_check="$remote_root/RCLONE_TEST"
+      ;;
+  esac
+
+  touch "$content_dir/RCLONE_TEST"
+  rclone touch "$remote_check"
+  resync_args='--resync-mode newer'
+else
+  resync_args=''
+fi
+
+# shellcheck disable=SC2086
+rclone bisync "$content_dir" "$remote" \
+  --filter-from "$filter_file" \
+  --check-access \
+  --max-delete 10 \
+  --resilient \
+  --recover \
+  --max-lock 2m \
+  --conflict-resolve none \
+  --create-empty-src-dirs \
+  $resync_args
+
+if [ "$initial" = true ]; then
+  BRAIN_ROOT="$brain_root" "$HOME/.local/bin/brain-qmd-setup"
+else
+  BRAIN_ROOT="$brain_root" "$HOME/.local/bin/brain-qmd-refresh"
+fi

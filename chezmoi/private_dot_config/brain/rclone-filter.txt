@@ -1,0 +1,6 @@
+# Obsidian configuration can contain local plugin state and credentials.
+- /.obsidian/**
+
+# These public bootstrap files are owned by Git, not vault synchronization.
+- /AGENTS.md
+- /.gitkeep

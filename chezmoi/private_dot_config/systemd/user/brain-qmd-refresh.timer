@@ -1,0 +1,11 @@
+[Unit]
+Description=Refresh the Brain QMD index regularly
+
+[Timer]
+OnBootSec=2m
+OnUnitInactiveSec=2m
+Persistent=true
+RandomizedDelaySec=15s
+
+[Install]
+WantedBy=timers.target

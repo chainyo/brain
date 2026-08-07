@@ -1,0 +1,9 @@
+[Unit]
+Description=Synchronize the Brain vault and refresh QMD
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=-%h/.config/brain/sync.env
+ExecStart=%h/.local/bin/brain-sync

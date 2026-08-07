@@ -1,0 +1,62 @@
+#!/bin/sh
+set -eu
+
+if [ -n "${BRAIN_ROOT:-}" ]; then
+  brain_root="$BRAIN_ROOT"
+elif [ -d "$PWD/content" ] && [ -f "$PWD/.chezmoiroot" ]; then
+  brain_root="$PWD"
+else
+  brain_root="$HOME/brain"
+fi
+content_dir="$brain_root/content"
+mise_bin="${MISE_BIN:-$HOME/.local/bin/mise}"
+
+if [ ! -d "$content_dir" ]; then
+  printf 'Brain vault not found: %s\n' "$content_dir" >&2
+  exit 1
+fi
+
+if [ ! -x "$mise_bin" ]; then
+  printf 'Mise not found: %s\n' "$mise_bin" >&2
+  exit 1
+fi
+
+content_dir="$(cd "$content_dir" && pwd -P)"
+
+qmd() {
+  "$mise_bin" exec -- qmd --index brain "$@"
+}
+
+codex() {
+  "$mise_bin" exec -- codex "$@"
+}
+
+collection="$(qmd collection show brain 2>/dev/null || true)"
+collection_path="$(printf '%s\n' "$collection" | sed -n 's/^  Path:[[:space:]]*//p')"
+
+if [ "$collection_path" != "$content_dir" ]; then
+  if [ -n "$collection" ]; then
+    qmd collection remove brain
+  fi
+  qmd collection add "$content_dir" --name brain
+fi
+
+qmd context add qmd://brain "Private Obsidian vault"
+BRAIN_ROOT="$brain_root" "$HOME/.local/bin/brain-qmd-refresh"
+
+current_mcp="$(codex mcp get qmd --json 2>/dev/null || true)"
+# The dollar-prefixed name below is a jq variable, not a shell variable.
+# shellcheck disable=SC2016
+if ! printf '%s\n' "$current_mcp" | "$mise_bin" exec -- jq -e \
+  --arg command "$mise_bin" \
+  '.transport.type == "stdio"
+    and .transport.command == $command
+    and .transport.args == ["exec", "--", "qmd", "--index", "brain", "mcp"]' \
+  >/dev/null 2>&1; then
+  if [ -n "$current_mcp" ]; then
+    codex mcp remove qmd
+  fi
+  codex mcp add qmd -- "$mise_bin" exec -- qmd --index brain mcp
+fi
+
+qmd status

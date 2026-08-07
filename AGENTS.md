@@ -14,6 +14,8 @@ This repository is public. Treat every tracked file as internet-visible.
   repository except for `code/.gitkeep`.
 - Treat every direct child of `code/` as a separate repository and run Git
   commands from inside that child repository.
+- Never create a worktree for this bootstrap repository. Use worktrees only in
+  the independent code repositories that need them.
 - `chezmoi/` contains public, generic Chezmoi source state.
 - `mise.toml` contains public tool versions and repeatable setup tasks.
 - Do not add other tracked knowledge notes, Markdown templates, generated
@@ -55,6 +57,6 @@ Apply these rules here and under `code/` unless local guidance is stricter.
   changes, and never edit generated files manually.
 - Search private knowledge with QMD before recursively reading `content/`, and
   retrieve only the relevant documents.
-- Use isolated branches or worktrees for implementation and do not broaden the
-  requested scope without agreement.
+- Use isolated branches or worktrees for implementation in code repositories
+  and do not broaden the requested scope without agreement.
 - Keep documentation and examples aligned with shipped behavior.
