@@ -1,6 +1,7 @@
 # The Obsidian vault is synchronized separately and is never committed.
 /content/**
 !/content/.gitkeep
+!/content/AGENTS.md
 
 # Code repositories are independent Git projects and are never committed here.
 /code/**

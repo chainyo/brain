@@ -5,16 +5,19 @@ This repository is public. Treat every tracked file as internet-visible.
 ## Repository boundaries
 
 - `content/` is the only knowledge directory and is the Obsidian vault.
-- Everything inside `content/` is private, synchronized separately, and ignored
-  by Git except for `content/.gitkeep`.
+- Vault notes inside `content/` are private, synchronized separately, and
+  ignored by Git. Only `content/.gitkeep` and the public writing rules in
+  `content/AGENTS.md` are tracked.
+- Read `content/AGENTS.md` before creating, updating, moving, or deleting vault
+  notes.
 - `code/` contains independently cloned Git repositories and is ignored by this
   repository except for `code/.gitkeep`.
 - Treat every direct child of `code/` as a separate repository and run Git
   commands from inside that child repository.
 - `chezmoi/` contains public, generic Chezmoi source state.
 - `mise.toml` contains public tool versions and repeatable setup tasks.
-- Do not add tracked knowledge notes, Markdown templates, generated indexes, or
-  additional vault directories.
+- Do not add other tracked knowledge notes, Markdown templates, generated
+  indexes, or additional vault directories.
 
 ## Safety
 
@@ -50,6 +53,8 @@ Apply these rules here and under `code/` unless local guidance is stricter.
   non-obvious impact, and a concrete fix.
 - Read local guidance, use repository-native commands, preserve unrelated
   changes, and never edit generated files manually.
+- Search private knowledge with QMD before recursively reading `content/`, and
+  retrieve only the relevant documents.
 - Use isolated branches or worktrees for implementation and do not broaden the
   requested scope without agreement.
 - Keep documentation and examples aligned with shipped behavior.
