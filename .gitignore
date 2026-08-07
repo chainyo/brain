@@ -1,0 +1,61 @@
+# The Obsidian vault is synchronized separately and is never committed.
+/content/**
+!/content/.gitkeep
+
+# Code repositories are independent Git projects and are never committed here.
+/code/**
+!/code/.gitkeep
+
+# Machine-specific Mise overrides.
+/mise.local.toml
+/mise.*.local.toml
+
+# Environment files and credentials.
+**/.env
+**/.env.*
+!**/.env.example
+**/*secret*.json
+**/*secrets*.json
+**/*credential*.json
+**/*credentials*.json
+**/*token*.json
+**/auth.json
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/*.age
+**/.netrc
+**/.npmrc
+**/.pypirc
+
+# Infrastructure state and local runtime data.
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/*.tfvars
+**/.wrangler/
+**/*.sqlite
+**/*.sqlite-*
+**/*.db
+**/*.db-*
+**/*.log
+**/*.tmp
+**/*.bak
+
+# Tool caches and generated output.
+**/.cache/
+**/node_modules/
+**/.venv/
+**/__pycache__/
+**/dist/
+**/build/
+**/coverage/
+
+# Operating-system and editor metadata.
+**/.DS_Store
+**/Thumbs.db
+**/.idea/
+**/.vscode/
+**/*.swp
+**/*~

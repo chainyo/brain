@@ -1,0 +1,18 @@
+min_version = "2026.6.0"
+
+[tools]
+chezmoi = "2"
+
+[tasks.install]
+description = "Apply the public VPS configuration and install managed tools"
+run = [
+  "chezmoi --source . apply --verbose",
+  "mise install --yes",
+]
+
+[tasks.check]
+description = "Preview Chezmoi changes and validate Mise"
+run = [
+  "chezmoi --source . diff",
+  "mise doctor",
+]

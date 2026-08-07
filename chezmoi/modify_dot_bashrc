@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+
+current_file="$(mktemp)"
+trap 'rm -f "$current_file"' EXIT
+cat >"$current_file"
+cat "$current_file"
+
+# Keep the activation command literal so it is evaluated by future shells.
+# shellcheck disable=SC2016
+activation='eval "$($HOME/.local/bin/mise activate bash)"'
+if ! grep -Fq "$activation" "$current_file"; then
+  printf '\n# Activate tools managed by Mise.\n%s\n' "$activation"
+fi
