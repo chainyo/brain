@@ -11,6 +11,7 @@ uv = "latest"
 
 gh = "latest"
 jq = "1"
+"github:mongodb/kingfisher" = "latest"
 ripgrep = "15"
 yq = "4"
 
