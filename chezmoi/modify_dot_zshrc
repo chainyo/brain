@@ -4,11 +4,36 @@ set -eu
 current_file="$(mktemp)"
 trap 'rm -f "$current_file"' EXIT
 cat >"$current_file"
-cat "$current_file"
 
-# Keep the activation command literal so it is evaluated by future shells.
+# Keep these commands literal so they are evaluated by future shells.
 # shellcheck disable=SC2016
-activation='eval "$($HOME/.local/bin/mise activate zsh)"'
-if ! grep -Fq "$activation" "$current_file"; then
-  printf '\n# Activate tools managed by Mise.\n%s\n' "$activation"
+path_line='export PATH="$HOME/.local/bin:$PATH"'
+# shellcheck disable=SC2016
+legacy_activation='eval "$($HOME/.local/bin/mise activate zsh)"'
+# shellcheck disable=SC2016
+activation='command -v mise >/dev/null 2>&1 && eval "$(mise activate zsh)"'
+has_path=false
+has_activation=false
+
+while IFS= read -r line || [ -n "$line" ]; do
+  if [ "$line" = "$legacy_activation" ]; then
+    continue
+  fi
+  printf '%s\n' "$line"
+  if [ "$line" = "$path_line" ]; then
+    has_path=true
+  fi
+  if [ "$line" = "$activation" ]; then
+    has_activation=true
+  fi
+done <"$current_file"
+
+if [ "$has_path" = false ]; then
+  printf '\n%s\n' "$path_line"
+fi
+if [ "$has_activation" = false ]; then
+  if ! grep -Fq '# Activate tools managed by Mise.' "$current_file"; then
+    printf '\n# Activate tools managed by Mise.\n'
+  fi
+  printf '%s\n' "$activation"
 fi

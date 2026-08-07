@@ -15,7 +15,7 @@
     <key>BRAIN_ROOT</key>
     <string>{{ dir .chezmoi.sourceDir }}</string>
     <key>MISE_BIN</key>
-    <string>{{ .chezmoi.homeDir }}/.local/bin/mise</string>
+    <string>{{ lookPath "mise" }}</string>
   </dict>
 
   <key>ProcessType</key>

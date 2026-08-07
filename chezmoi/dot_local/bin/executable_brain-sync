@@ -49,8 +49,18 @@ fi
 content_dir="$brain_root/content"
 remote="${BRAIN_RCLONE_REMOTE:-brain-vault:}"
 filter_file="${BRAIN_RCLONE_FILTER:-$HOME/.config/brain/rclone-filter.txt}"
-mise_bin="${MISE_BIN:-$HOME/.local/bin/mise}"
 state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/brain"
+
+if [ -n "${MISE_BIN:-}" ]; then
+  mise_bin="$MISE_BIN"
+elif [ -x "$HOME/.local/bin/mise" ]; then
+  mise_bin="$HOME/.local/bin/mise"
+elif command -v mise >/dev/null 2>&1; then
+  mise_bin="$(command -v mise)"
+else
+  printf '%s\n' 'Mise not found in PATH or ~/.local/bin.' >&2
+  exit 1
+fi
 
 if [ ! -d "$content_dir" ]; then
   printf 'Brain vault not found: %s\n' "$content_dir" >&2
