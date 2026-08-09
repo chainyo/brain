@@ -38,7 +38,9 @@ launchctl bootstrap "gui/$UID" \
 
 The same command works from another clone location because it detects the brain
 repository from the current directory. The LaunchAgent refreshes QMD every two
-minutes after BYOC changes the vault. Check it with:
+minutes after BYOC changes the vault. QMD indexes private Markdown notes while
+excluding the public `AGENTS.md` guidance and local `.obsidian/` state. Check it
+with:
 
 ```bash
 launchctl print "gui/$UID/dev.brain.qmd-refresh"
@@ -161,6 +163,10 @@ cd "$HOME/brain"
 git pull --ff-only
 mise run install
 ```
+
+The tracked Mise lockfiles resolve the readable major and `latest` tool targets
+to tested versions and download checksums for macOS ARM64 and Linux x64. Update
+them intentionally with `mise lock` when refreshing the managed toolchain.
 
 ## Check
 

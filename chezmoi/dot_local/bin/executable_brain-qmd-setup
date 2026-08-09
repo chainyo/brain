@@ -10,6 +10,15 @@ else
 fi
 content_dir="$brain_root/content"
 
+if [ -n "${QMD_CONFIG_DIR:-}" ]; then
+  qmd_config_dir="$QMD_CONFIG_DIR"
+elif [ -n "${XDG_CONFIG_HOME:-}" ]; then
+  qmd_config_dir="$XDG_CONFIG_HOME/qmd"
+else
+  qmd_config_dir="$HOME/.config/qmd"
+fi
+qmd_config="$qmd_config_dir/brain.yml"
+
 if [ -n "${MISE_BIN:-}" ]; then
   mise_bin="$MISE_BIN"
 elif [ -x "$HOME/.local/bin/mise" ]; then
@@ -50,6 +59,17 @@ if [ "$collection_path" != "$content_dir" ]; then
   fi
   qmd collection add "$content_dir" --name brain
 fi
+
+if [ ! -f "$qmd_config" ]; then
+  printf 'QMD configuration not found: %s\n' "$qmd_config" >&2
+  exit 1
+fi
+
+# Keep public bootstrap guidance and local Obsidian state out of knowledge
+# retrieval. These patterns are relative to the collection root.
+"$mise_bin" exec -- yq -i \
+  '.collections.brain.ignore = ["AGENTS.md", ".obsidian/**"]' \
+  "$qmd_config"
 
 qmd context add qmd://brain "Private Obsidian vault"
 BRAIN_ROOT="$brain_root" "$HOME/.local/bin/brain-qmd-refresh"
