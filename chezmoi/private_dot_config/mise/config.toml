@@ -16,6 +16,7 @@ gh = "latest"
 "github:mongodb/kingfisher" = "latest"
 helm = "4"
 jq = "1"
+just = "latest"
 kubectl = "latest"
 node = "24"
 "npm:@tobilu/qmd" = { version = "latest", npm_args = "--ignore-scripts=false" }
