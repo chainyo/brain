@@ -38,8 +38,9 @@ This repository is public. Treat every tracked file as internet-visible.
 Apply these rules here and under `code/` unless local guidance is stricter.
 
 - Use [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/#specification)
-  for every commit and pull request title, including documentation and
-  configuration changes. Keep each change focused.
+  for every commit, GitHub pull request title, and squash commit message,
+  including documentation and configuration changes. Keep each change focused.
+- Merge GitHub pull requests using squash merge only.
 - When asked to commit, also push the commit unless explicitly told otherwise.
 - Use `uv` exclusively for Python environments, dependencies, locking, commands,
   and publishing. Commit `uv.lock` for reproducible projects.
