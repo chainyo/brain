@@ -19,6 +19,12 @@ else
 fi
 qmd_config="$qmd_config_dir/brain.yml"
 
+if [ -n "${XDG_CACHE_HOME:-}" ]; then
+  qmd_cache_dir="$XDG_CACHE_HOME/qmd"
+else
+  qmd_cache_dir="$HOME/.cache/qmd"
+fi
+
 if [ -n "${MISE_BIN:-}" ]; then
   mise_bin="$MISE_BIN"
 elif [ -x "$HOME/.local/bin/mise" ]; then
@@ -41,6 +47,37 @@ if [ ! -x "$mise_bin" ]; then
 fi
 
 content_dir="$(cd "$content_dir" && pwd -P)"
+
+# Remove a legacy default-index duplicate only when it points at this vault.
+# Preserve the default index when it contains any unrelated collections.
+default_qmd_config="$qmd_config_dir/index.yml"
+if [ -f "$default_qmd_config" ]; then
+  default_brain_collections="$(
+    CONTENT_DIR="$content_dir" "$mise_bin" exec -- yq -r \
+      '(.collections // {}) | to_entries[] |
+        select(.value.path == strenv(CONTENT_DIR)) | .key' \
+      "$default_qmd_config" 2>/dev/null || true
+  )"
+  default_collection_count="$(
+    "$mise_bin" exec -- yq -r '.collections // {} | length' \
+      "$default_qmd_config" 2>/dev/null || true
+  )"
+  if [ -n "$default_brain_collections" ]; then
+    if [ "$default_collection_count" = "1" ]; then
+      rm -f \
+        "$default_qmd_config" \
+        "$qmd_cache_dir/index.sqlite" \
+        "$qmd_cache_dir/index.sqlite-shm" \
+        "$qmd_cache_dir/index.sqlite-wal"
+      printf '%s\n' 'Removed duplicate default QMD index for the brain vault.'
+    else
+      printf '%s\n' "$default_brain_collections" | while IFS= read -r name; do
+        "$mise_bin" exec -- qmd collection remove "$name"
+      done
+      printf '%s\n' 'Removed the brain vault from the shared default QMD index.'
+    fi
+  fi
+fi
 
 qmd() {
   "$mise_bin" exec -- qmd --index brain "$@"

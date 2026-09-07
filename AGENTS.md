@@ -55,8 +55,10 @@ Apply these rules here and under `code/` unless local guidance is stricter.
   non-obvious impact, and a concrete fix.
 - Read local guidance, use repository-native commands, preserve unrelated
   changes, and never edit generated files manually.
-- Search private knowledge with QMD before recursively reading `content/`, and
-  retrieve only the relevant documents.
+- Search private knowledge with `brain-qmd` (or the configured `qmd` MCP
+  server) before recursively reading `content/`, and retrieve only the relevant
+  documents. Never use bare `qmd`; its upstream default is a separate index
+  named `index`, not this repository's `brain` index.
 - Use isolated branches or worktrees for implementation in code repositories
   and do not broaden the requested scope without agreement.
 - Keep documentation and examples aligned with shipped behavior.

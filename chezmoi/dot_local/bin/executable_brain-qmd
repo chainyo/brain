@@ -1,0 +1,20 @@
+#!/bin/sh
+set -eu
+
+if [ -n "${MISE_BIN:-}" ]; then
+  mise_bin="$MISE_BIN"
+elif [ -x "$HOME/.local/bin/mise" ]; then
+  mise_bin="$HOME/.local/bin/mise"
+elif command -v mise >/dev/null 2>&1; then
+  mise_bin="$(command -v mise)"
+else
+  printf '%s\n' 'Mise not found in PATH or ~/.local/bin.' >&2
+  exit 1
+fi
+
+if [ ! -x "$mise_bin" ]; then
+  printf 'Mise not found: %s\n' "$mise_bin" >&2
+  exit 1
+fi
+
+exec "$mise_bin" exec -- qmd --index brain "$@"

@@ -5,7 +5,9 @@ other note remains untracked and is synchronized separately.
 
 ## Before writing
 
-- Search with QMD and read only the relevant results.
+- Search with `brain-qmd` or the configured `qmd` MCP server and read only the
+  relevant results. Never use bare `qmd`; it selects an unrelated default index
+  instead of the vault's named `brain` index.
 - Update an existing note instead of creating a duplicate.
 - Create a note only for knowledge that will remain useful beyond the current
   conversation. Do not save raw transcripts or temporary reasoning.

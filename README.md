@@ -44,12 +44,14 @@ with:
 
 ```bash
 launchctl print "gui/$UID/dev.brain.qmd-refresh"
-qmd --index brain status
+brain-qmd status
 codex mcp get qmd
 ```
 
 Run `brain-qmd-refresh` directly whenever an immediate index refresh is needed.
-The VPS timer provides the equivalent automation on Linux.
+Use `brain-qmd` for all direct QMD commands; it always selects the named
+`brain` index. Do not use bare `qmd`, whose upstream default is a separate index
+named `index`. The VPS timer provides the equivalent automation on Linux.
 
 ## Install on a Debian or Ubuntu VPS
 
@@ -132,7 +134,7 @@ with:
 ```bash
 systemctl --user status brain-sync.timer
 journalctl --user -u brain-sync.service -n 100
-qmd --index brain status
+brain-qmd status
 codex mcp get qmd
 ```
 
