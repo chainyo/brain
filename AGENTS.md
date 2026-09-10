@@ -41,6 +41,12 @@ Apply these rules here and under `code/` unless local guidance is stricter.
   for every commit and pull request title, including documentation and
   configuration changes. Keep each change focused.
 - When asked to commit, also push the commit unless explicitly told otherwise.
+- Assign every pull request created on the user's behalf, including drafts, to
+  the user unless explicitly instructed otherwise. When authenticated as the
+  user, use `gh pr create --assignee @me` or
+  `gh pr edit <pr-url> --add-assignee @me`. If using a bot or service account,
+  resolve the user's GitHub login instead of assigning the bot. Verify the
+  assignment and report any failure.
 - Use `uv` exclusively for Python environments, dependencies, locking, commands,
   and publishing. Commit `uv.lock` for reproducible projects.
 - Prefer the smallest clear change that fixes the root cause. Avoid speculative
