@@ -8,6 +8,7 @@ description = "Apply the public machine configuration and install managed tools"
 run = [
   "chezmoi --source . apply --verbose --no-pager",
   "mise install --yes",
+  "curl -fsSL https://herdr.dev/install.sh | sh",
 ]
 
 [tasks.check]

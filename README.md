@@ -170,6 +170,10 @@ The tracked Mise lockfiles resolve the readable major and `latest` tool targets
 to tested versions and download checksums for macOS ARM64 and Linux x64. Update
 them intentionally with `mise lock` when refreshing the managed toolchain.
 
+`mise run install` also installs or updates [Herdr](https://herdr.dev/) using its
+official installer. Herdr lives in `~/.local/bin` and follows the latest release
+independently of the Mise lockfiles. Run `herdr` to start it.
+
 ## Check
 
 ```bash
