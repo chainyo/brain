@@ -75,16 +75,18 @@ checksum = "sha256:9fad1201c328428634b8a086f767df0dfe6dd3ea1128a2a7c45bc0b16641e
 url = "https://github.com/twpayne/chezmoi/releases/download/v2.71.1/chezmoi_2.71.1_darwin_arm64.tar.gz"
 
 [[tools.codex]]
-version = "0.146.0"
+version = "0.162.1"
 backend = "aqua:openai/codex"
 
 [tools.codex."platforms.linux-x64"]
-checksum = "sha256:0ad69792208dd46a8486a6eec354293ef54715946e3a60668308ea8f9afc6c0e"
-url = "https://github.com/openai/codex/releases/download/rust-v0.146.0/codex-x86_64-unknown-linux-musl.zst"
+checksum = "sha256:a676f5722aae0d86cbe3764332f08eab1fdd89dc0a300b3ad4ffbf48611fa3e3"
+url = "https://github.com/openai/codex/releases/download/rust-v0.162.1/codex-package-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/openai/codex/releases/assets/625965833"
 
 [tools.codex."platforms.macos-arm64"]
-checksum = "sha256:bb99ed8494acbbaaad8ff5dd9325bf0bcdb43703718cc0402dd9defea14014ec"
-url = "https://github.com/openai/codex/releases/download/rust-v0.146.0/codex-aarch64-apple-darwin.zst"
+checksum = "sha256:88e37ccddf5a0f4ea9dc1be13c66a2a94f9c2d1a04f3ace9053d71b3939e885d"
+url = "https://github.com/openai/codex/releases/download/rust-v0.162.1/codex-package-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/openai/codex/releases/assets/625989262"
 
 [[tools.gh]]
 version = "2.97.0"
