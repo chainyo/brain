@@ -9,7 +9,12 @@ run = [
   "chezmoi --source . apply --verbose --no-pager",
   "mise install --yes",
   "curl -fsSL https://herdr.dev/install.sh | sh",
+  "mise run install-codex-focus",
 ]
+
+[tasks.install-codex-focus]
+description = "Build and install the pinned Codex focus-mode fork alongside Codex"
+run = "sh chezmoi/dot_local/bin/executable_brain-codex-focus-setup"
 
 [tasks.check]
 description = "Preview Chezmoi changes and validate Mise"

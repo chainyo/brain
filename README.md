@@ -57,7 +57,8 @@ named `index`. The VPS timer provides the equivalent automation on Linux.
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y ca-certificates curl git util-linux
+sudo apt-get install -y ca-certificates curl git util-linux \
+  build-essential cmake pkg-config libssl-dev libcap-dev
 git clone https://github.com/chainyo/brain.git "$HOME/brain"
 cd "$HOME/brain"
 curl https://mise.run | sh
@@ -173,6 +174,26 @@ them intentionally with `mise lock` when refreshing the managed toolchain.
 `mise run install` also installs or updates [Herdr](https://herdr.dev/) using its
 official installer. Herdr lives in `~/.local/bin` and follows the latest release
 independently of the Mise lockfiles. Run `herdr` to start it.
+
+`mise run install` also builds and installs `codex-focus`, a separate Codex CLI
+with the community [focus-mode patch](https://github.com/WladmirJunior/codex/commit/18208da18be401804c4ae48ea6533193d56371b3).
+The installer pins that original revision and installs Rust 1.95.0 through Mise
+for the build. The first run compiles from source and needs several gigabytes
+of disk space. Subsequent runs reuse the binary cached under
+`${XDG_CACHE_HOME:-~/.cache}/brain/codex-focus/`.
+
+To install just this tool, run:
+
+```bash
+mise run install-codex-focus
+```
+
+Start `codex-focus` from a project directory, then enter `/focus` to toggle the
+compact view. `Ctrl+T` opens the full transcript. The normal `codex` installation
+remains available. Both commands use the same default Codex configuration and
+session storage; `/focus` saves its preference there. The fork is pinned
+independently of the standard Codex release and does not update automatically.
+To rebuild it, remove its revision directory from the cache and rerun the task.
 
 ## Check
 

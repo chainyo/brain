@@ -1,0 +1,69 @@
+#!/bin/sh
+set -eu
+
+# Original display-only focus patch; later fork revisions also change prompting.
+revision=18208da18be401804c4ae48ea6533193d56371b3
+rust_version=1.95.0
+repository=https://github.com/WladmirJunior/codex.git
+cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/brain/codex-focus/$revision"
+binary="$cache_dir/codex-focus"
+destination="$HOME/.local/bin/codex-focus"
+mise_bin="${MISE_BIN:-mise}"
+
+install_atomically() {
+  temporary="$(mktemp "$2.XXXXXX")"
+  trap 'rm -f "$temporary"' EXIT HUP INT TERM
+  install -m 755 "$1" "$temporary"
+  mv -f "$temporary" "$2"
+}
+
+if [ ! -x "$binary" ]; then
+  case "$(uname -s)" in
+    Darwin)
+      xcode-select -p >/dev/null
+      ;;
+    Linux)
+      for dependency in cc c++ make cmake pkg-config; do
+        if ! command -v "$dependency" >/dev/null 2>&1; then
+          printf '%s\n' \
+            'Install build dependencies first: sudo apt-get install build-essential cmake pkg-config libssl-dev libcap-dev' >&2
+          exit 1
+        fi
+      done
+      if ! pkg-config --exists openssl libcap; then
+        printf '%s\n' 'Install library headers first: sudo apt-get install libssl-dev libcap-dev' >&2
+        exit 1
+      fi
+      ;;
+    *)
+      printf '%s\n' 'codex-focus setup supports macOS and Linux.' >&2
+      exit 1
+      ;;
+  esac
+
+  mkdir -p "$cache_dir"
+  if [ ! -d "$cache_dir/source/.git" ]; then
+    git init -q "$cache_dir/source"
+  fi
+  (
+    cd "$cache_dir/source"
+    git fetch --depth=1 "$repository" "$revision"
+    git checkout --detach "$revision"
+    "$mise_bin" install --yes "rust@$rust_version"
+    cd codex-rs
+    "$mise_bin" exec "rust@$rust_version" -- \
+      cargo build --locked --release -p codex-cli --bin codex \
+      --target-dir "$cache_dir/target"
+  )
+  install_atomically "$cache_dir/target/release/codex" "$binary"
+fi
+
+mkdir -p "$(dirname "$destination")"
+if [ -x "$destination" ] && cmp -s "$binary" "$destination"; then
+  printf '%s\n' 'codex-focus is already up to date.'
+else
+  # Replace atomically so a failed install cannot truncate an existing binary.
+  install_atomically "$binary" "$destination"
+  printf 'Installed codex-focus (%s).\n' "$revision"
+fi
+printf '%s\n' 'Run codex-focus and enter /focus to toggle the compact view.'
