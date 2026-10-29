@@ -68,3 +68,45 @@ Apply these rules here and under `code/` unless local guidance is stricter.
 - Use isolated branches or worktrees for implementation in code repositories
   and do not broaden the requested scope without agreement.
 - Keep documentation and examples aligned with shipped behavior.
+
+## Linear
+
+Use these rules for work tracked in Linear, here and in the independent code
+repositories. Follow the relevant team's current Linear guide and local rules.
+
+- Consult Linear before planning or changing tracked work. Search for existing
+  issues, milestones, and projects before creating records.
+- Maintain tracking for agreed work as part of the task. Create missing issues
+  within the authorized scope and update existing records instead of duplicating
+  them. Keep unrelated backlogs outside the change.
+- Organize delivery under an existing project and a milestone with a clear
+  outcome. Agree new projects with the team before creating them.
+  Use parent issues for substantial tasks and linked sub-issues for
+  bounded implementation or verification work. Keep small steps in checklists.
+- Set the project, milestone, and parent on sub-issues. Record blocking and
+  related work with Linear relationships, including dependencies across repos.
+- Confirm the project lead and one delivery assignee for each issue. Keep these
+  responsibilities distinct. Use agreed owners; resolve unknown ownership with
+  the requester. Follow local rules for milestone ownership and agent delegation.
+- Write issues with an outcome, scope, source references, and acceptance checks.
+  Apply the team's existing priority and label conventions for useful filtering.
+  Add target or due dates only when a real deadline has been agreed.
+- Track blocking decisions with an owner. Reference the applicable PRDs and
+  ADRs, and record new technical decisions in the team's established ADR system.
+- Update status, blockers, and meaningful progress as work proceeds. Link PRs
+  and verification evidence. Complete issues only after their acceptance checks
+  pass; complete parent work only after all required child work is complete.
+- Keep Linear authoritative for delivery status, ownership, and dates. Keep
+  requirements and decisions in their established documentation systems, with
+  links between them and Linear. Follow the team's cycle and progress-update
+  cadence without inventing commitments.
+- Make repository READMEs identify the associated Linear projects. Make new or
+  changed capability documentation identify relevant milestones or issues.
+  Include issue identifiers and URLs in PR descriptions and link PRs from Linear.
+  Keep these references current without copying live task lists into docs.
+- Respect each destination's confidentiality rules. In this public bootstrap
+  repository, keep instructions generic and use placeholders for private links.
+  Never copy workspace details or private tracking records into tracked files.
+  Keep private tracking links and identifiers out of public PR descriptions too.
+- Report unavailable Linear access and any updates that could not be saved.
+  Do not claim tracking changes succeeded without verifying the result.
