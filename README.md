@@ -161,6 +161,13 @@ git clone <repository-url>
 
 ## Update
 
+Brain requires Mise `2026.10.23` or newer. To update an older installation
+without updating its plugins, run:
+
+```bash
+mise self-update --yes --no-plugins 2026.10.23
+```
+
 ```bash
 cd "$HOME/brain"
 git pull --ff-only
