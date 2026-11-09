@@ -68,3 +68,22 @@ Apply these rules here and under `code/` unless local guidance is stricter.
 - Use isolated branches or worktrees for implementation in code repositories
   and do not broaden the requested scope without agreement.
 - Keep documentation and examples aligned with shipped behavior.
+
+## Branch and worktree bases
+
+For repositories under `code/`:
+
+- Fetch `origin/main` before creating an implementation branch or worktree;
+  use the configured remote/default branch if different. Report fetch failures
+  and stop creation; never use a cached base.
+- Resolve the fetched ref to a SHA and pass it explicitly:
+  `git worktree add --no-track -b <branch> <path> <base-sha>`.
+  Never default to current `HEAD` or local `main`.
+- Before editing, verify the new `HEAD` equals that SHA and report the base ref
+  and SHA in a progress update.
+- For explicitly requested stacks or other targets, fetch and resolve that
+  base instead; state the target and reason.
+- On resume, fetch and verify the intended base is an ancestor of `HEAD`.
+  Align through the repository's merge/rebase policy and rerun relevant checks
+  when needed. Preserve edits and commits; never reset, discard changes, or
+  rewrite shared history for alignment.
