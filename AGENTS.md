@@ -29,7 +29,7 @@ This repository is public. Treat every tracked file as internet-visible.
   accounts, or the home directory into tracked files.
 - Examples must use public repository URLs or obvious placeholders.
 - Configuration must obtain credentials from the environment or a secret
-  manager; no real values belong in this repository.
+  manager. No real values belong in this repository.
 - Before completing a change, inspect `git status --short`, verify ignore rules,
   and review every file Git would add.
 
@@ -52,8 +52,8 @@ Apply these rules here and under `code/` unless local guidance is stricter.
 - Prefer the smallest clear change that fixes the root cause. Avoid speculative
   abstractions, compatibility layers, dependencies, and fallbacks.
 - Test behavior and contracts, not incidental markup, CSS, or implementation
-  details. Run relevant tests, linting, type checks, and builds before committing;
-  report anything not run.
+  details. Run relevant tests, linting, type checks, and builds before committing.
+  Report anything not run.
 - Before every commit, run
   `kingfisher scan . --staged --quiet --redact --no-validate --no-update-check`
   from the target repository and resolve every finding.
@@ -63,27 +63,42 @@ Apply these rules here and under `code/` unless local guidance is stricter.
   changes, and never edit generated files manually.
 - Search private knowledge with `brain-qmd` (or the configured `qmd` MCP
   server) before recursively reading `content/`, and retrieve only the relevant
-  documents. Never use bare `qmd`; its upstream default is a separate index
+  documents. Never use bare `qmd`. Its upstream default is a separate index
   named `index`, not this repository's `brain` index.
 - Use isolated branches or worktrees for implementation in code repositories
   and do not broaden the requested scope without agreement.
 - Keep documentation and examples aligned with shipped behavior.
 
+## Documentation
+
+Apply here and under `code/`. Follow stricter local guidance.
+
+- Use ASD-STE100 writing rules and controlled vocabulary for new or edited
+  documentation, READMEs, agent instructions, docstrings, and comments.
+- Read any local writing guide first. Keep sentences short, use active voice,
+  and use consistent terms.
+- Do not use semicolons (`;`) or double hyphens (`--`) as prose punctuation.
+  Preserve required syntax in commands, code, identifiers, and exact quotations.
+- Preserve facts, requirements, warnings, commands, identifiers, links, and
+  required formats, including NumPy docstrings and Rustdoc.
+- Check against the official standard. Summaries and automated checks alone
+  do not establish full conformity.
+
 ## Branch and worktree bases
 
 For repositories under `code/`:
 
-- Fetch `origin/main` before creating an implementation branch or worktree;
-  use the configured remote/default branch if different. Report fetch failures
-  and stop creation; never use a cached base.
+- Fetch `origin/main` before creating an implementation branch or worktree.
+  Use the configured remote/default branch if different. Report fetch failures
+  and stop creation. Never use a cached base.
 - Resolve the fetched ref to a SHA and pass it explicitly:
   `git worktree add --no-track -b <branch> <path> <base-sha>`.
   Never default to current `HEAD` or local `main`.
 - Before editing, verify the new `HEAD` equals that SHA and report the base ref
   and SHA in a progress update.
 - For explicitly requested stacks or other targets, fetch and resolve that
-  base instead; state the target and reason.
+  base instead. State the target and reason.
 - On resume, fetch and verify the intended base is an ancestor of `HEAD`.
   Align through the repository's merge/rebase policy and rerun relevant checks
-  when needed. Preserve edits and commits; never reset, discard changes, or
+  when needed. Preserve edits and commits. Never reset, discard changes, or
   rewrite shared history for alignment.
