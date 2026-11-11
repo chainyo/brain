@@ -165,7 +165,7 @@ Brain requires Mise `2026.10.23` or newer. To update an older installation
 without updating its plugins, run:
 
 ```bash
-mise self-update --yes --no-plugins 2026.10.23
+mise self-update --yes --no-plugins
 ```
 
 ```bash
